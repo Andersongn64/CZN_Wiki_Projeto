@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Painel administrativo do ChaosZero" />
+    <title>Admin — ChaosZero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-900 p-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-2xl font-bold mb-6">ChaosZero Admin</h1>
+
+      <div class="space-y-6">
+
+        <!-- Notion Database ID -->
+        <div>
+          <label for="dbId" class="block text-sm font-medium mb-1">
+            Notion Database ID
+          </label>
+          <input
+            id="dbId"
+            class="w-full border px-3 py-2 rounded"
+            placeholder="(deixe vazio para usar o valor do .env)"
+          />
+        </div>
+
+        <!-- Upload de arquivo -->
+        <div>
+          <label for="fileInput" class="block text-sm font-medium mb-1">
+            Upload exportação do Notion (MD / CSV)
+          </label>
+          <input
+            id="fileInput"
+            type="file"
+            accept=".md,.markdown,.csv"
+            class="w-full"
+          />
+          <div class="mt-2">
+            <button
+              id="uploadBtn"
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition disabled:opacity-50"
+            >
+              Upload e Ingestar
+            </button>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="flex gap-2">
+          <button
+            id="ingestBtn"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition disabled:opacity-50"
+          >
+            Rodar Ingest (Notion)
+          </button>
+          <button
+            id="statusBtn"
+            class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition disabled:opacity-50"
+          >
+            Atualizar Status
+          </button>
+        </div>
+
+        <!-- Saída -->
+        <div>
+

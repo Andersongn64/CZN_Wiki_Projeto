@@ -1,0 +1,179 @@
+/* ─── Tailwind Directives ─────────────────────────────────────────────────── */
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+/* ─── Variaveis globais ───────────────────────────────────────────────────── */
+/* chaos-primary centralizado aqui — usado pelo Tailwind via tailwind.config.js */
+:root {
+  --chaos-primary:       #e94560;
+  --chaos-primary-hover: #c73652;
+  --chaos-primary-dark:  #a82b43;
+  --chaos-primary-glow:  rgba(233, 69, 96, 0.15);
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #f9fafb;
+    color: #111827;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  html.dark body {
+    background-color: #0f172a;
+    color: #e2e8f0;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--chaos-primary);
+  }
+}
+
+/* ─── Components ──────────────────────────────────────────────────────────── */
+@layer components {
+
+  /* ── Botoes base (compartilha padding, radius, transition) ───────────────── */
+  .btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 200ms, transform 100ms, opacity 200ms;
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── btn-primary ─────────────────────────────────────────────────────────── */
+  .btn-primary {
+    background-color: var(--chaos-primary);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled)  { background-color: var(--chaos-primary-hover); transform: translateY(-1px); }
+  .btn-primary:active:not(:disabled) { background-color: var(--chaos-primary-dark);  transform: translateY(0); }
+
+  /* ── btn-secondary ───────────────────────────────────────────────────────── */
+  .btn-secondary {
+    background-color: #16a34a;
+    color: #fff;
+  }
+  .btn-secondary:hover:not(:disabled)  { background-color: #15803d; transform: translateY(-1px); }
+  .btn-secondary:active:not(:disabled) { transform: translateY(0); }
+
+  /* ── btn-danger ──────────────────────────────────────────────────────────── */
+  .btn-danger {
+    background-color: #dc2626;
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled)  { background-color: #b91c1c; transform: translateY(-1px); }
+  .btn-danger:active:not(:disabled) { background-color: #991b1b; transform: translateY(0); }
+
+  /* ── Cards ───────────────────────────────────────────────────────────────── */
+  .card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    padding: 1.25rem;
+    border: 1px solid #f3f4f6;
+    transition: box-shadow 200ms, transform 200ms, background-color 250ms, border-color 250ms;
+  }
+  .card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+  }
+
+  html.dark .card {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+  }
+  html.dark .card:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+  }
+
+  /* ── Inputs ──────────────────────────────────────────────────────────────── */
+  .input {
+    width: 100%;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 200ms, box-shadow 200ms, background-color 250ms;
+  }
+  .input:focus {
+    border-color: var(--chaos-primary);
+    box-shadow: 0 0 0 3px var(--chaos-primary-glow);
+  }
+
+  html.dark .input {
+    background-color: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+  }
+  html.dark .input::placeholder { color: #64748b; }
+  html.dark .input:focus {
+    border-color: var(--chaos-primary);
+    box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.2);
+  }
+
+  /* ── Tags ────────────────────────────────────────────────────────────────── */
+  .tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background-color: #fce7eb;
+    color: var(--chaos-primary);
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
+  }
+  html.dark .tag {
+    background-color: #2d1a24;
+    color: #fca5a5;
+  }
+
+  .tag-green {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background-color: #dcfce7;
+    color: #15803d;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
+  }
+  html.dark .tag-green {
+    background-color: #064e3b;
+    color: #bbf7d0;
+  }
+}
+
+/* ─── Utilities ───────────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* Scrollbar customizada: Firefox + Webkit */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--chaos-primary) #1e293b;
+  }
+  .scrollbar-thin::-webkit-scrollbar       { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: #1e293b; border-radius: 9999px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background-color: var(--chaos-primary); border-radius: 9999px; }
+
+  /* Gradiente da marca */
+  .gradient-chaos {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, var(--chaos-primary) 100%);
+  }
+}

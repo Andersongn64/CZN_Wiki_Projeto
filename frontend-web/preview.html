@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <!-- Encoding (primeiro do head) -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <meta name="description" content="ChaosZero Wiki — Preview de builds e recomendações de personagens" />
+
+    <!-- Open Graph -->
+    <meta property="og:title"       content="ChaosZero Wiki — Preview" />
+    <meta property="og:description" content="Builds e recomendações de personagens" />
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="http://localhost:5173" />
+
+    <!-- PWA / Mobile -->
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <!-- Icones -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <title>ChaosZero Preview</title>
+
+    <!-- Tailwind CDN (apenas para preview/dev — nao usar em producao) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-900 p-8">
+
+    <!-- Header -->
+    <header class="max-w-3xl mx-auto mb-6">
+      <h1 class="text-3xl font-bold">ChaosZero Wiki — Preview</h1>
+    </header>
+
+    <!-- Main -->
+    <main class="max-w-3xl mx-auto">
+
+      <!-- Builds -->
+      <section id="builds" class="mb-8">
+        <h2 class="text-2xl font-semibold mb-3">Builds</h2>
+        <div class="flex gap-2 mb-4">
+          <input
+            id="q"
+            type="text"
+            aria-label="Buscar build"
+            placeholder="Buscar por personagem ou nome..."
+            class="flex-1 border rounded px-3 py-2"
+          />
+          <button
+            type="button"
+            id="searchBtn"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Buscar
+          </button>
+        </div>
+        <ul id="buildList" class="space-y-3" aria-live="polite"></ul>
+      </section>
+
+      <!-- Recommend -->
+      <section id="recommend">
+        <h2 class="text-2xl font-semibold mb-3">Recomendar</h2>
+        <p class="text-sm text-gray-500 mb-2">
+          Insira personagens separados por vírgula (ex: Sereniel, Haru)
+        </p>
+        <div class="flex gap-2 mb-4">
+          <input
+            id="chars"
+            type="text"
+            aria-label="Personagens para recomendacao"
+            value="Sereniel"
+            class="flex-1 border rounded px-3 py-2"
+          />
+          <button
+            type="button"
+            id="recBtn"
+            class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Recomendar
+          </button>
+        </div>
+        <pre
+          id="recOut"
+          aria-live="polite"
+          class="whitespace-pre-wrap bg-white p-4 rounded shadow text-sm text-gray-400"
+        >Insira personagens e clique em Recomendar...</pre>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-3xl mx-auto mt-12 pt-4 border-t text-xs text-gray-400">
+      ChaosZero Wiki &copy; 2026 — Preview
+    </footer>
+
+    <script>
+      // ─── Dados ─────────────────────────────────────────────────────────────
+      var builds = [
+        {
+          id: 1,
+          name: 'DPS Physical',
+          characters: ['Sereniel'],
+          tags: ['dps', 'physical'],
+          description: 'High damage physical build focused on single target burst'
+        },
+        {
+          id: 2,
+          name: 'Support Healer',
+          characters: ['Haru'],
+          tags: ['support', 'heal'],
+          description: 'Buff and heal focused build for sustaining the team'
+        },
+        {
+          id: 3,
+          name: 'Hybrid Team',
+          characters: ['Sereniel', 'Haru'],
+          tags: ['hybrid', 'physical', 'support'],
+          description: 'Balanced hybrid team combining DPS and support roles'
+        }
+      ];
+
+      // ─── Renderiza lista de builds ─────────────────────────────────────────
+      function renderBuilds(list) {
+        var ul = document.getElementById('buildList');
+        ul.innerHTML = '';
+
+        if (!list || list.length === 0) {
+          var empty = document.createElement('li');
+          empty.className   = 'text-gray-500 text-sm';
+          empty.textContent = 'Nenhum build encontrado.';
+          ul.appendChild(empty);
+          return;
+        }
+
+        for (var i = 0; i < list.length; i++) {
+          var b = list[i];
+
+          var li = document.createElement('li');
+          li.className = 'p-3 bg-white rounded shadow';
+
+          var strong = document.createElement('strong');
+          strong.className   = 'block text-lg';
+          strong.textContent = b.name;
+
+          var desc = document.createElement('p');
+          desc.className   = 'text-sm text-gray-600 mt-1';
+          desc.textContent = b.description;
+
+          var meta = document.createElement('p');
+          meta.className   = 'text-xs text-blue-500 mt-1';
+          meta.textContent = 'Characters: ' + b.characters.join(', ') + ' | Tags: ' + b.tags.join(', ');
+
+          li.appendChild(strong);
+          li.appendChild(desc);
+          li.appendChild(meta);
+          ul.appendChild(li);
+        }
+      }
+
+      // ─── Busca ─────────────────────────────────────────────────────────────
+      function handleSearch() {
+        var q = document.getElementById('q').value.trim().toLowerCase();
+
+        if (!q) {
+          renderBuilds(builds);
+          return;
+        }
+
+        var filtered = [];
+        for (var i = 0; i < builds.length; i++) {
+          var b = builds[i];
+          var match =
+            b.name.toLowerCase().indexOf(q) !== -1 ||
+            b.characters.join(' ').toLowerCase().indexOf(q) !== -1 ||
+            b.tags.join(' ').toLowerCase().indexOf(q) !== -1;
+          if (match) filtered.push(b);
+        }
+
+        renderBuilds(filtered);
+      }
+
+      // ─── Recomendacao ──────────────────────────────────────────────────────
+      function handleRecommend() {
+        var raw   = document.getElementById('chars').value;
+        var out   = document.getElementById('recOut');
+        var chars = [];
+
+        var parts = raw.split(',');
+        for (var i = 0; i < parts.length; i++) {
+          var s = parts[i].trim();
+          if (s) chars.push(s);
+        }
+
+        if (chars.length === 0) {
+          out.textContent = 'Insira ao menos um personagem.';
+          return;
+        }
+
+        var docs = [];
+        for (var j = 0; j < builds.length; j++) {
+          var b = builds[j];
+          for (var k = 0; k < chars.length; k++) {
+            if (b.characters.indexOf(chars[k]) !== -1) {
+              docs.push(b);
+              break;
+            }
+          }
+        }
+
+        var combined = '';
+        for (var d = 0; d < docs.length; d++) {
+          combined += '- ' + docs[d].name + ': ' + docs[d].description + '\n';
+        }
+        if (!combined) combined = '- nenhum encontrado -\n';
+
+        out.textContent =
+          'Recomendacao para [' + chars.join(', ') + ']\n\n' +
+          'Builds encontrados:\n' + combined + '\n' +
+          'Build sugerido:\n' +
+          '- Armas: Itens de boost fisico\n' +
+          '- Distribuicao de papeis: 1 DPS, 1 Suporte\n' +
+          '- Dica: Tente um estilo de jogo agressivo';
+      }
+
+      // ─── Listeners ─────────────────────────────────────────────────────────
+      document.getElementById('searchBtn').addEventListener('click', handleSearch);
+      document.getElementById('recBtn').addEventListener('click', handleRecommend);
+
+      document.getElementById('q').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleSearch();
+      });
+
+      document.getElementById('chars').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') handleRecommend();
+      });
+
+      // ─── Init ──────────────────────────────────────────────────────────────
+      renderBuilds(builds);
+    </script>
+  </body>
+</html>
